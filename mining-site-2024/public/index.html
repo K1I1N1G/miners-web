@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Ensures padding/borders are included in element widths */
+        }
+        body {
+            margin: 0;
+            background-color: beige;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative;
+            font-family: Arial, sans-serif; /* Set font for the body */
+        }
+        .header {
+            width: 100%;
+            height: 70px; /* Reduced header height */
+            background-color: white;
+            border-bottom: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px; /* Horizontal padding for the header */
+            position: relative;
+            z-index: 1;
+        }
+        .logo {
+            height: 60px; /* Reduced logo height */
+            width: auto; /* Maintain aspect ratio */
+        }
+        .navbar {
+            margin-top: 0; /* Remove margin top for better alignment */
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            padding: 5px 15px;
+            height: 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white !important;
+            text-decoration: none; /* Remove underline */
+            display: flex; /* Make the anchor tag behave like a button */
+            align-items: center; /* Center text vertically */
+            justify-content: center; /* Center text horizontally */
+            transition: background-color 0.3s; /* Smooth background transition */
+        }
+        .button:hover {
+            opacity: 0.8; /* Slight opacity change on hover */
+        }
+        .signup {
+            background-color: #808080 !important; /* Grey background for signup */
+        }
+        .login {
+            background-color: black !important; /* Black background for login */
+        }
+        .content {
+            margin-top: 125px;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        h1 {
+            font-size: 24px; /* Adjust heading size */
+        }
+        p {
+            font-size: 16px; /* Adjust paragraph size */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="static/images/logo.svg" class="logo" alt="static/images/logo.svg">
+        <div class="navbar">
+            <a href="templates/signup.html" class="button signup">Sign Up</a>
+            <a href="templates/login.html" class="button login">Log In</a>
+        </div>
+    </div>
+    <div class="content">
+<pre style="font-family: Arial, sans-serif;">
+<h1>Ensuring Safety, Productivity, And 
+Accountability in Indian Coal 
+Mining</h1><p>
+Track Workforce Performance, Attendance, and Operational Efficiency with Real-
+Time Insights
+</p></pre>
+    </div>
+</body>
+</html>

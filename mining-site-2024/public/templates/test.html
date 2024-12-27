@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5dc; /* Beige background */
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getFirestore, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2kBEgcUQH2s3b0n1JylU4Ji0KV1sF1_s",
+            authDomain: "mining-site-2024.firebaseapp.com",
+            projectId: "mining-site-2024",
+            storageBucket: "mining-site-2024.appspot.com",
+            messagingSenderId: "448522786959",
+            appId: "1:448522786959:web:8e641ed59539df7caab8fa"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Function to fetch user names and display them
+        async function fetchUserNames() {
+            try {
+                const usersSnapshot = await getDocs(collection(db, 'users'));
+                const userList = document.getElementById('user-list');
+
+                if (usersSnapshot.empty) {
+                    userList.innerHTML = '<li>No users found in the collection.</li>';
+                    return;
+                }
+
+                usersSnapshot.forEach(doc => {
+                    const user = doc.data();
+                    const listItem = document.createElement('li');
+                    listItem.textContent = user.name; // Assuming the field name is 'name'
+                    userList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchUserNames(); // Fetch user names on page load
+        });
+    </script>
+</head>
+<body>
+    <h1>User List</h1>
+    <ul id="user-list"></ul>
+</body>
+</html>

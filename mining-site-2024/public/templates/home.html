@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Info with Profile Dropdown</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: beige;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .header {
+            width: 100%;
+            height: 70px;
+            background-color: white;
+            border-bottom: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            height: 60px;
+            width: auto;
+        }
+
+        .top-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            position: relative;
+        }
+
+        .top-nav a {
+            color: grey;
+            text-decoration: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dropdown menu styling */
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            min-width: 150px;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            color: black;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .dropdown a:hover {
+            background-color: lightgrey;
+        }
+
+        .content {
+            margin-top: 125px;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Custom green alert box */
+        .alert-box {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: green;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 250px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            display: none;
+            z-index: 3;
+        }
+    </style>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2kBEgcUQH2s3b0n1JylU4Ji0KV1sF1_s",
+            authDomain: "mining-site-2024.firebaseapp.com",
+            projectId: "mining-site-2024",
+            storageBucket: "mining-site-2024.appspot.com",
+            messagingSenderId: "448522786959",
+            appId: "1:448522786959:web:8e641ed59539df7caab8fa"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        async function getUserProfile(uid) {
+            try {
+                const userDocRef = doc(db, "user", uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    console.log("User Data:", userData);
+
+                    document.getElementById('profilePic').src = userData.profilepic;
+                } else {
+                    console.error("No such document found!");
+                }
+            } catch (error) {
+                console.error("Error fetching user document:", error);
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const uid = user.uid;
+                console.log("User's UID:", uid);
+                getUserProfile(uid);
+            } else {
+                console.log("No user signed in.");
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const profilePic = document.querySelector('.profile-pic');
+            const dropdown = document.querySelector('.dropdown');
+            const alertBox = document.querySelector('.alert-box');
+
+            profilePic.addEventListener('click', () => {
+                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Logout function
+            document.getElementById('logout').addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    showAlert('Logged out successfully!');
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Logout Error:', error);
+                }
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!profilePic.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            // Function to show the alert box
+            function showAlert(message) {
+                alertBox.textContent = message;
+                alertBox.style.display = 'block';
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="alert-box"></div>
+
+    <div class="header">
+        <img src="logo.svg" class="logo" alt="Logo">
+        
+        <div class="top-nav">
+            <a href="attendance.html">Attendance</a>
+            <a href="logs.html">Logs</a>
+
+            <div class="profile-pic">
+                <img id="profilePic" src="default-profile.jpg" alt="Profile Picture">
+            </div>
+
+            <div class="dropdown">
+                <a href="displayprofile.html">View Profile</a>
+                <a id="logout" href="#">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <pre style="font-family: Arial, sans-serif;">
+<h1>
+Ensuring Safety, Productivity, And 
+Accountability in Indian Coal 
+Mining</h1><p>
+Track Workforce Performance, Attendance, and Operational Efficiency with Real-
+Time Insights
+        </p></pre>
+    </div>
+</body>
+</html>
